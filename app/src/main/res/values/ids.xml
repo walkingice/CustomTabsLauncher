@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="action_bar" type="id"/>
+    <item name="action_button" type="id"/>
     <item name="remote_btn_1" type="id"/>
     <item name="remote_btn_2" type="id"/>
     <item name="remote_btn_3" type="id"/>
