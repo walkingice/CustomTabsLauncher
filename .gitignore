@@ -1,9 +1,27 @@
-*.iml
-.gradle
 /local.properties
-/.idea/workspace.xml
-/.idea/libraries
+
+# for gradle, IDEA
+.gradle
+!.idea/runConfigurations/*
+.idea/copyright/
+.idea/inspectionProfiles/
+.idea/dictionaries/
+.idea/libraries/
+.idea/dictionaries/
+.idea/*.xml
+.idea/.name
+.idea/fileTemplates/
+build
+*.iml
+
+# key
+release.gradle
+
+# properties
+app/version.properties
+
+captures
 .DS_Store
-/build
-/captures
-.externalNativeBuild
+
+#for google services, for push notifications
+app/google-services.json
