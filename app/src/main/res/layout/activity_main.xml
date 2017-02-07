@@ -31,13 +31,31 @@
                 android:layout_height="wrap_content"
                 android:text="Input URL to open in Custom Tab"/>
 
-            <EditText
-                android:id="@+id/edit_text"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textUri"
-                android:text="https://www.google.com.tw"/>
+                android:orientation="vertical">
+
+                <Spinner
+                    android:id="@+id/urls_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:entries="@array/selectable_urls"
+                    />
+
+                <EditText
+                    android:id="@+id/edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:inputType="textUri"
+                    android:text="https://www.google.com.tw"/>
+
+
+            </LinearLayout>
+
 
             <LinearLayout
                 android:layout_width="match_parent"

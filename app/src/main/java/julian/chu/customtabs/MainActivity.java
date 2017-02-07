@@ -82,6 +82,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setSpinners() {
+        ((Spinner) findViewById(R.id.urls_spinner)).setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String[] urls = getResources().getStringArray(R.array.selectable_urls);
+                mInput.setText(urls[i]);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+
         ((Spinner) findViewById(R.id.menu_item_spinner)).setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
