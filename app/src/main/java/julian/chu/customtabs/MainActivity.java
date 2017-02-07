@@ -8,7 +8,9 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.customtabs.CustomTabsIntent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -52,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initActionBar();
 
         mIcon = getBitmap(R.drawable.small_logo);
         mBtn0 = (Button) findViewById(R.id.btn_0);
@@ -60,6 +63,11 @@ public class MainActivity extends AppCompatActivity {
         bindButton();
         setSpinners();
         setToggleButton();
+    }
+
+    private void initActionBar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
+        setSupportActionBar(toolbar);
     }
 
     private Bitmap getBitmap(int res) {
