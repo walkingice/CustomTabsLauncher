@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean mCustomAnimation = true;
     private boolean mCustomCloseBtn = false;
+    private boolean mShowTitle = true;
     private Mode mMode = Mode.NONE;
 
     private enum Mode {
@@ -166,6 +167,14 @@ public class MainActivity extends AppCompatActivity {
                         mCustomCloseBtn = b;
                     }
                 });
+
+        ((ToggleButton) findViewById(R.id.widget_show_title)).setOnCheckedChangeListener(
+                new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                        mShowTitle = b;
+                    }
+                });
     }
 
     // Yes, Dirty! Bite me!
@@ -218,6 +227,7 @@ public class MainActivity extends AppCompatActivity {
         // set action button
         builder.setActionButton(mIcon, "The initium", createIntent(REQ_INITIUM, "https://theinitium.com/"));
         builder.setToolbarColor(mTopBarColor);
+        builder.setShowTitle(mShowTitle);
 
         // set menu items
         setMenuItems(builder);
@@ -227,6 +237,7 @@ public class MainActivity extends AppCompatActivity {
             builder.setStartAnimations(this, R.anim.push_down_in, R.anim.push_down_out);
             builder.setExitAnimations(this, R.anim.push_up_in, R.anim.push_up_out);
         }
+
 
         if (mCustomCloseBtn) {
             builder.setCloseButtonIcon(getBitmap(R.drawable.ic_close));
