@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean mCustomAnimation = true;
     private boolean mCustomCloseBtn = false;
     private boolean mShowTitle = true;
+    private boolean mButtonTint = false;
     private Mode mMode = Mode.NONE;
 
     private enum Mode {
@@ -209,6 +210,14 @@ public class MainActivity extends AppCompatActivity {
                         mShowTitle = b;
                     }
                 });
+
+        ((ToggleButton) findViewById(R.id.widget_action_button_tint)).setOnCheckedChangeListener(
+                new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                        mButtonTint = b;
+                    }
+                });
     }
 
     // Yes, Dirty! Bite me!
@@ -259,7 +268,11 @@ public class MainActivity extends AppCompatActivity {
         CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
 
         // set action button
-        builder.setActionButton(mIcon, "The initium", createIntent(REQ_INITIUM, "https://theinitium.com/"));
+        builder.setActionButton(mIcon,
+                "The initium",
+                createIntent(REQ_INITIUM, "https://theinitium.com/"),
+                mButtonTint);
+
         builder.setToolbarColor(mTopBarColor);
         builder.setShowTitle(mShowTitle);
 
