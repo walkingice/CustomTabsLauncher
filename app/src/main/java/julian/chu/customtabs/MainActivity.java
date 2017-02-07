@@ -229,7 +229,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (mCustomCloseBtn) {
-            builder.setCloseButtonIcon(getBitmap(R.drawable.ic_e));
+            builder.setCloseButtonIcon(getBitmap(R.drawable.ic_close));
         }
 
         if (mode != Mode.NONE) {
