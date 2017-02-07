@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Tab Launcher</string>
+    <string name="app_name">Custom Tabs</string>
     <string-array name="selectable_colors">
         <item>MAGENTA</item>
         <item>CYAN</item>
