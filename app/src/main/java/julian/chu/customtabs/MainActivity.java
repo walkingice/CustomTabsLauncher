@@ -10,8 +10,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.customtabs.CustomTabsIntent;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -122,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
         mBtn0.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                handleInput(mInput.getEditableText(), mMode);
+                onClickLaunch();
             }
         });
     }
@@ -304,7 +306,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void handleInput(CharSequence input, Mode mode) {
+    private CustomTabsIntent.Builder createBuilder(Mode mode) {
         CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
 
         // set action button
@@ -339,13 +341,7 @@ public class MainActivity extends AppCompatActivity {
             setBottomToolbar(builder, mode);
         }
 
-        try {
-            CustomTabsIntent intent = builder.build();
-            intent.launchUrl(this, Uri.parse(input.toString()));
-        } catch (Exception e) {
-            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-        }
+        return builder;
     }
 
     private void setMenuItems(CustomTabsIntent.Builder builder) {
@@ -397,5 +393,16 @@ public class MainActivity extends AppCompatActivity {
         builder.addToolbarItem(3, getBitmap(R.drawable.ic_c), "item c", createIntent(3, "https://duckduckgo.com/?q=c"));
         builder.addToolbarItem(4, getBitmap(R.drawable.ic_d), "item d", createIntent(4, "https://duckduckgo.com/?q=d"));
         builder.addToolbarItem(5, getBitmap(R.drawable.ic_e), "item e", createIntent(5, "https://duckduckgo.com/?q=e"));
+    }
+
+    private void onClickLaunch() {
+        CustomTabsIntent.Builder builder = createBuilder(mMode);
+        CustomTabsIntent customTabsIntent = builder.build();
+        Intent intent = customTabsIntent.intent;
+        Uri uri = Uri.parse(mInput.getEditableText().toString());
+
+        // similar implementation as CustomTabsIntent.launchUrl
+        intent.setData(uri);
+        ActivityCompat.startActivity(this, intent, customTabsIntent.startAnimationBundle);
     }
 }
