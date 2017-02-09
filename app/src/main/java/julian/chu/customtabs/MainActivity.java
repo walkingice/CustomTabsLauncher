@@ -1,6 +1,5 @@
 package julian.chu.customtabs;
 
-import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -50,7 +49,8 @@ public class MainActivity extends AppCompatActivity {
     private boolean mCustomAnimation = true;
     private boolean mCustomCloseBtn = false;
     private boolean mShouldShowTitle = true;
-    private boolean mButtonTint = false;
+    private boolean mShouldActionBtn = true;
+    private boolean mShouldActionBtnTint = false;
     private Mode mMode = Mode.NONE;
 
     private enum Mode {
@@ -199,12 +199,16 @@ public class MainActivity extends AppCompatActivity {
     private void refreshUI() {
         findViewById(R.id.top_color_spinner).setEnabled(mShouldCustomTopColor);
         findViewById(R.id.bottom_color_spinner).setEnabled(mShouldCustomBottomColor);
-        findViewById(R.id.action_button_tint_desc).setEnabled(mButtonTint);
         findViewById(R.id.exit_animation_desc).setEnabled(mCustomAnimation);
         findViewById(R.id.close_button_desc).setEnabled(mCustomCloseBtn);
         findViewById(R.id.show_title_desc).setEnabled(mShouldShowTitle);
         findViewById(R.id.top_color_preview).setBackgroundColor(mTopBarColor);
         findViewById(R.id.bottom_color_preview).setBackgroundColor(mBottomBarColor);
+
+
+        findViewById(R.id.action_button_desc).setEnabled(mShouldActionBtn);
+        findViewById(R.id.widget_action_button_tint).setEnabled(mShouldActionBtn);
+        findViewById(R.id.action_button_tint_desc).setEnabled(mShouldActionBtn && mShouldActionBtnTint);
     }
 
     private void setToggleButton() {
@@ -223,8 +227,11 @@ public class MainActivity extends AppCompatActivity {
         ((ToggleButton) findViewById(R.id.widget_show_title)).setOnCheckedChangeListener(
                 buildCheckHandler("mShouldShowTitle"));
 
+        ((ToggleButton) findViewById(R.id.widget_action_button)).setOnCheckedChangeListener(
+                buildCheckHandler("mShouldActionBtn"));
+
         ((ToggleButton) findViewById(R.id.widget_action_button_tint)).setOnCheckedChangeListener(
-                buildCheckHandler("mButtonTint"));
+                buildCheckHandler("mShouldActionBtnTint"));
     }
 
     /**
@@ -301,10 +308,12 @@ public class MainActivity extends AppCompatActivity {
         CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
 
         // set action button
-        builder.setActionButton(mIcon,
-                "The initium",
-                createIntent(REQ_INITIUM, "https://theinitium.com/"),
-                mButtonTint);
+        if (mShouldActionBtn) {
+            builder.setActionButton(mIcon,
+                    "The initium",
+                    createIntent(REQ_INITIUM, "https://theinitium.com/"),
+                    mShouldActionBtnTint);
+        }
 
         if (mShouldCustomTopColor) {
             builder.setToolbarColor(mTopBarColor);

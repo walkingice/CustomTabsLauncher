@@ -204,6 +204,39 @@
 
             <View style="@style/Separator"/>
 
+            <!-- Action button -->
+            <LinearLayout style="@style/Segment">
+
+                <TextView
+                    style="@style/SubHeaderStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Enable Action Button"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/action_button_desc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="7"
+                        android:text="Should to enable action button"/>
+
+                    <ToggleButton
+                        android:id="@+id/widget_action_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="true"/>
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <View style="@style/Separator"/>
+
             <!-- Tint -->
             <LinearLayout style="@style/Segment">
 
