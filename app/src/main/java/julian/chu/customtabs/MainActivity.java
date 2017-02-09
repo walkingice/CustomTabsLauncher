@@ -1,7 +1,10 @@
 package julian.chu.customtabs;
 
 import android.app.PendingIntent;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -13,15 +16,16 @@ import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -31,7 +35,9 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -46,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
     private Button mBtn0;
     private EditText mInput;
 
+    private List<String> mSupportPackages;
+
     private boolean mShouldCustomTopColor = true;
     private boolean mShouldCustomBottomColor = true;
     private boolean mCustomAnimation = true;
@@ -53,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
     private boolean mShouldShowTitle = true;
     private boolean mShouldActionBtn = true;
     private boolean mShouldActionBtnTint = false;
+    private boolean mShouldHardCode = false;
+    private String mTargetPackage = null;
     private Mode mMode = Mode.NONE;
 
     private enum Mode {
@@ -67,6 +77,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initActionBar();
+
+        mSupportPackages = getSupportPackagesName();
 
         mIcon = getBitmap(R.drawable.small_logo);
         mBtn0 = (Button) findViewById(R.id.btn_0);
@@ -196,6 +208,28 @@ public class MainActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
+
+        Spinner hardCodeSpinner = (Spinner) findViewById(R.id.hard_code_spinner);
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item,
+                mSupportPackages);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        hardCodeSpinner.setAdapter(spinnerAdapter);
+        spinnerAdapter.notifyDataSetChanged();
+        hardCodeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (mSupportPackages.size() < 1) {
+                    return;
+                }
+                mTargetPackage = mSupportPackages.get(i);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+
     }
 
     private void refreshUI() {
@@ -211,6 +245,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.action_button_desc).setEnabled(mShouldActionBtn);
         findViewById(R.id.widget_action_button_tint).setEnabled(mShouldActionBtn);
         findViewById(R.id.action_button_tint_desc).setEnabled(mShouldActionBtn && mShouldActionBtnTint);
+        findViewById(R.id.hard_code_spinner).setEnabled(mShouldHardCode);
     }
 
     private void setToggleButton() {
@@ -234,6 +269,9 @@ public class MainActivity extends AppCompatActivity {
 
         ((ToggleButton) findViewById(R.id.widget_action_button_tint)).setOnCheckedChangeListener(
                 buildCheckHandler("mShouldActionBtnTint"));
+
+        ((ToggleButton) findViewById(R.id.widget_hard_code)).setOnCheckedChangeListener(
+                buildCheckHandler("mShouldHardCode"));
     }
 
     /**
@@ -395,6 +433,27 @@ public class MainActivity extends AppCompatActivity {
         builder.addToolbarItem(5, getBitmap(R.drawable.ic_e), "item e", createIntent(5, "https://duckduckgo.com/?q=e"));
     }
 
+    /**
+     * snippet from https://github.com/GoogleChrome/custom-tabs-client/blob/master/shared/
+     * src/main/java/org/chromium/customtabsclient/shared/CustomTabsHelper.java#L63
+     */
+    private List<String> getSupportPackagesName() {
+        String ACTION_CUSTOM_TABS_CONNECTION = "android.support.customtabs.action.CustomTabsService";
+        Intent activityIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://t.co"));
+        PackageManager pm = getPackageManager();
+        List<ResolveInfo> activities = pm.queryIntentActivities(activityIntent, PackageManager.MATCH_ALL);
+        List<String> supportPackageNames = new ArrayList<>();
+        for (ResolveInfo info : activities) {
+            Intent serviceIntent = new Intent();
+            serviceIntent.setAction(ACTION_CUSTOM_TABS_CONNECTION);
+            serviceIntent.setPackage(info.activityInfo.packageName);
+            if (pm.resolveService(serviceIntent, 0) != null) {
+                supportPackageNames.add(info.activityInfo.packageName);
+            }
+        }
+        return supportPackageNames;
+    }
+
     private void onClickLaunch() {
         CustomTabsIntent.Builder builder = createBuilder(mMode);
         CustomTabsIntent customTabsIntent = builder.build();
@@ -403,6 +462,18 @@ public class MainActivity extends AppCompatActivity {
 
         // similar implementation as CustomTabsIntent.launchUrl
         intent.setData(uri);
-        ActivityCompat.startActivity(this, intent, customTabsIntent.startAnimationBundle);
+
+        if (mShouldHardCode && mTargetPackage != null) {
+            intent.setPackage(mTargetPackage);
+        }
+
+        try {
+            ActivityCompat.startActivity(this, intent, customTabsIntent.startAnimationBundle);
+        } catch (ActivityNotFoundException e) {
+            Log.e(TAG, "Specified CustomTabsActivity not found", e);
+            // use normal way to launch custom-tab-activity
+            CustomTabsIntent rebuiltIntent = createBuilder(mMode).build();
+            rebuiltIntent.launchUrl(this, uri);
+        }
     }
 }
