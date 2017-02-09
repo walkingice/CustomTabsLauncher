@@ -97,7 +97,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/gutter"
-                    android:text="Top bar color"/>
+                    android:text="Top bar"/>
+
+                <ToggleButton
+                    android:id="@+id/set_top_color"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"/>
 
                 <FrameLayout
                     android:layout_width="@dimen/small_widget_size"

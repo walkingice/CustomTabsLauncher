@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -46,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private View mTopColorPreview;
     private View mBottomColorPreview;
 
+    private boolean mShouldCustomTopColor = true;
     private boolean mCustomAnimation = true;
     private boolean mCustomCloseBtn = false;
     private boolean mShowTitle = true;
@@ -197,7 +197,20 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void refreshUI() {
+        findViewById(R.id.top_color_spinner).setEnabled(mShouldCustomTopColor);
+    }
+
     private void setToggleButton() {
+        ((ToggleButton) findViewById(R.id.set_top_color)).setOnCheckedChangeListener(
+                new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                        mShouldCustomTopColor = b;
+                        refreshUI();
+                    }
+                });
+
         ((ToggleButton) findViewById(R.id.widget_custom_animation)).setOnCheckedChangeListener(
                 new CompoundButton.OnCheckedChangeListener() {
                     @Override
@@ -284,7 +297,10 @@ public class MainActivity extends AppCompatActivity {
                 createIntent(REQ_INITIUM, "https://theinitium.com/"),
                 mButtonTint);
 
-        builder.setToolbarColor(mTopBarColor);
+        if (mShouldCustomTopColor) {
+            builder.setToolbarColor(mTopBarColor);
+        }
+
         builder.setShowTitle(mShowTitle);
 
         // set menu items
