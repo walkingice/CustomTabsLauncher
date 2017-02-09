@@ -1,5 +1,6 @@
 package julian.chu.customtabs;
 
+import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -28,6 +29,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
@@ -207,58 +209,48 @@ public class MainActivity extends AppCompatActivity {
 
     private void setToggleButton() {
         ((ToggleButton) findViewById(R.id.set_top_color)).setOnCheckedChangeListener(
-                new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                        mShouldCustomTopColor = b;
-                        refreshUI();
-                    }
-                });
+                buildCheckHandler("mShouldCustomTopColor"));
 
         ((ToggleButton) findViewById(R.id.should_set_bottom_bar_color)).setOnCheckedChangeListener(
-                new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                        mShouldCustomBottomColor = b;
-                        refreshUI();
-                    }
-                });
+                buildCheckHandler("mShouldCustomBottomColor"));
 
         ((ToggleButton) findViewById(R.id.widget_custom_animation)).setOnCheckedChangeListener(
-                new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                        mCustomAnimation = b;
-                        refreshUI();
-                    }
-                });
+                buildCheckHandler("mCustomAnimation"));
 
         ((ToggleButton) findViewById(R.id.widget_custom_close_btn)).setOnCheckedChangeListener(
-                new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                        mCustomCloseBtn = b;
-                        refreshUI();
-                    }
-                });
+                buildCheckHandler("mCustomCloseBtn"));
 
         ((ToggleButton) findViewById(R.id.widget_show_title)).setOnCheckedChangeListener(
-                new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                        mShouldShowTitle = b;
-                        refreshUI();
-                    }
-                });
+                buildCheckHandler("mShouldShowTitle"));
 
         ((ToggleButton) findViewById(R.id.widget_action_button_tint)).setOnCheckedChangeListener(
-                new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                        mButtonTint = b;
-                        refreshUI();
-                    }
-                });
+                buildCheckHandler("mButtonTint"));
+    }
+
+    /**
+     * Use reflect to build dynamic function to handle Check-button status change
+     *
+     * @param fieldName which field to change boolean value
+     * @return a handler for CompoundButton.setOnCheckedChangeListener
+     */
+    private CompoundButton.OnCheckedChangeListener buildCheckHandler(final String fieldName) {
+        return new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                Class<?> clazz = MainActivity.this.getClass();
+                try {
+                    Field f = clazz.getDeclaredField(fieldName);
+                    f.setAccessible(true);
+                    f.setBoolean(MainActivity.this, b);
+                    refreshUI();
+                } catch (Exception e) {
+                    Toast.makeText(MainActivity.this,
+                            "Fail on set " + fieldName,
+                            Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+            }
+        };
     }
 
     // Yes, Dirty! Bite me!
