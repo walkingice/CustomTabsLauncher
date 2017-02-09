@@ -42,8 +42,6 @@ public class MainActivity extends AppCompatActivity {
     private Bitmap mIcon;
     private Button mBtn0;
     private EditText mInput;
-    private View mTopColorPreview;
-    private View mBottomColorPreview;
 
     private boolean mShouldCustomTopColor = true;
     private boolean mShouldCustomBottomColor = true;
@@ -73,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
         bindButton();
         setSpinners();
         setToggleButton();
+        refreshUI();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
@@ -114,10 +113,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setPreview() {
-        mTopColorPreview = findViewById(R.id.top_color_preview);
-        mBottomColorPreview = findViewById(R.id.bottom_color_preview);
-        mTopColorPreview.setBackgroundColor(mTopBarColor);
-        mBottomColorPreview.setBackgroundColor(mBottomBarColor);
+
     }
 
     private void bindButton() {
@@ -160,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 mTopBarColor = getColorByIdx(i);
-                mTopColorPreview.setBackgroundColor(mTopBarColor);
+                refreshUI();
             }
 
             @Override
@@ -172,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 mBottomBarColor = getColorByIdx(i);
-                mBottomColorPreview.setBackgroundColor(mBottomBarColor);
+                refreshUI();
             }
 
             @Override
@@ -200,6 +196,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void refreshUI() {
         findViewById(R.id.top_color_spinner).setEnabled(mShouldCustomTopColor);
+        findViewById(R.id.bottom_color_spinner).setEnabled(mShouldCustomBottomColor);
+        findViewById(R.id.top_color_preview).setBackgroundColor(mTopBarColor);
+        findViewById(R.id.bottom_color_preview).setBackgroundColor(mBottomBarColor);
     }
 
     private void setToggleButton() {
