@@ -4,6 +4,7 @@
         <item>https://www.google.com.tw</item>
         <item>https://mozilla.org</item>
         <item>https://twitter.com</item>
+        <item>http://stackoverflow.com</item>
         <item>https://en.wikipedia.org/wiki/Taiwan</item>
     </string-array>
     <string-array name="selectable_colors">
