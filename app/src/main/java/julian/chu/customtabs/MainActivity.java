@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean mShouldCustomBottomColor = true;
     private boolean mCustomAnimation = true;
     private boolean mCustomCloseBtn = false;
-    private boolean mShowTitle = true;
+    private boolean mShouldShowTitle = true;
     private boolean mButtonTint = false;
     private Mode mMode = Mode.NONE;
 
@@ -197,6 +197,10 @@ public class MainActivity extends AppCompatActivity {
     private void refreshUI() {
         findViewById(R.id.top_color_spinner).setEnabled(mShouldCustomTopColor);
         findViewById(R.id.bottom_color_spinner).setEnabled(mShouldCustomBottomColor);
+        findViewById(R.id.action_button_tint_desc).setEnabled(mButtonTint);
+        findViewById(R.id.exit_animation_desc).setEnabled(mCustomAnimation);
+        findViewById(R.id.close_button_desc).setEnabled(mCustomCloseBtn);
+        findViewById(R.id.show_title_desc).setEnabled(mShouldShowTitle);
         findViewById(R.id.top_color_preview).setBackgroundColor(mTopBarColor);
         findViewById(R.id.bottom_color_preview).setBackgroundColor(mBottomBarColor);
     }
@@ -225,6 +229,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                         mCustomAnimation = b;
+                        refreshUI();
                     }
                 });
 
@@ -233,6 +238,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                         mCustomCloseBtn = b;
+                        refreshUI();
                     }
                 });
 
@@ -240,7 +246,8 @@ public class MainActivity extends AppCompatActivity {
                 new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                        mShowTitle = b;
+                        mShouldShowTitle = b;
+                        refreshUI();
                     }
                 });
 
@@ -249,6 +256,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                         mButtonTint = b;
+                        refreshUI();
                     }
                 });
     }
@@ -310,7 +318,7 @@ public class MainActivity extends AppCompatActivity {
             builder.setToolbarColor(mTopBarColor);
         }
 
-        builder.setShowTitle(mShowTitle);
+        builder.setShowTitle(mShouldShowTitle);
 
         // set menu items
         setMenuItems(builder);
