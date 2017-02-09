@@ -2,7 +2,6 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusable="true"
@@ -33,27 +32,16 @@
             android:paddingBottom="@dimen/activity_vertical_margin"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/activity_vertical_margin"
-            tools:context="bar.foo.julian.dummy.MainActivity">
+            android:paddingTop="@dimen/activity_vertical_margin">
 
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Input URL to open in Custom Tab"/>
+            <!-- URL -->
+            <LinearLayout style="@style/Segment">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <Spinner
-                    android:id="@+id/urls_spinner"
+                <TextView
+                    style="@style/SubHeaderStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:entries="@array/selectable_urls"
-                    />
+                    android:text="URL"/>
 
                 <EditText
                     android:id="@+id/edit_text"
@@ -64,204 +52,310 @@
                     android:inputType="textUri"
                     android:text="https://www.google.com.tw"/>
 
-
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/gutter"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Menu items number"/>
-
                 <Spinner
-                    android:id="@+id/menu_item_spinner"
+                    android:id="@+id/urls_spinner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:entries="@array/menu_item_nums"
-                    android:minWidth="50dp"/>
+                    android:layout_gravity="end"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="1"
+                    android:entries="@array/selectable_urls"
+                    />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/gutter"
-                android:orientation="horizontal">
+            <View style="@style/Separator"/>
+
+            <!-- select menu items -->
+            <LinearLayout style="@style/Segment">
 
                 <TextView
+                    style="@style/SubHeaderStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/gutter"
-                    android:text="Top bar"/>
+                    android:text="Menu items"/>
 
-                <ToggleButton
-                    android:id="@+id/set_top_color"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:checked="true"/>
+                    android:orientation="horizontal">
 
-                <FrameLayout
-                    android:layout_width="@dimen/small_widget_size"
-                    android:layout_height="@dimen/small_widget_size"
-                    android:layout_marginRight="@dimen/gutter"
-                    android:background="#AAAAAA"
-                    android:padding="1dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="7"
+                        android:text="How many menu items"/>
 
-                    <ImageView
-                        android:id="@+id/top_color_preview"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@color/colorAccent"/>
-                </FrameLayout>
 
-                <Spinner
-                    android:id="@+id/top_color_spinner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:entries="@array/selectable_colors"/>
-
+                    <Spinner
+                        android:id="@+id/menu_item_spinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_weight="1"
+                        android:entries="@array/menu_item_nums"
+                        android:minWidth="50dp"/>
+                </LinearLayout>
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/gutter"
-                android:orientation="horizontal">
+            <View style="@style/Separator"/>
+
+            <!-- top bar color -->
+            <LinearLayout style="@style/Segment">
 
                 <TextView
+                    style="@style/SubHeaderStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/gutter"
+                    android:text="Top bar color"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="7">
+
+                        <FrameLayout
+                            android:layout_width="@dimen/small_widget_size"
+                            android:layout_height="@dimen/small_widget_size"
+                            android:layout_marginRight="@dimen/gutter"
+                            android:background="#AAAAAA"
+                            android:padding="1dp">
+
+                            <ImageView
+                                android:id="@+id/top_color_preview"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@color/colorAccent"/>
+                        </FrameLayout>
+
+                        <Spinner
+                            android:id="@+id/top_color_spinner"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:entries="@array/selectable_colors"/>
+                    </LinearLayout>
+
+                    <ToggleButton
+                        android:id="@+id/set_top_color"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_weight="1"
+                        android:checked="true"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <View style="@style/Separator"/>
+
+            <!-- bottom bar color -->
+            <LinearLayout style="@style/Segment">
+
+                <TextView
+                    style="@style/SubHeaderStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="Bottom bar color"/>
 
-                <FrameLayout
-                    android:layout_width="@dimen/small_widget_size"
-                    android:layout_height="@dimen/small_widget_size"
-                    android:layout_marginRight="@dimen/gutter"
-                    android:background="#AAAAAA"
-                    android:padding="1dp">
 
-                    <ImageView
-                        android:id="@+id/bottom_color_preview"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@color/colorAccent"/>
-                </FrameLayout>
-
-                <Spinner
-                    android:id="@+id/bottom_color_spinner"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:entries="@array/selectable_colors"/>
+                    android:orientation="horizontal">
 
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <FrameLayout
+                            android:layout_width="@dimen/small_widget_size"
+                            android:layout_height="@dimen/small_widget_size"
+                            android:layout_marginRight="@dimen/gutter"
+                            android:background="#AAAAAA"
+                            android:padding="1dp">
+
+                            <ImageView
+                                android:id="@+id/bottom_color_preview"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@color/colorAccent"/>
+                        </FrameLayout>
+
+                        <Spinner
+                            android:id="@+id/bottom_color_spinner"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:entries="@array/selectable_colors"/>
+
+                    </LinearLayout>
+                </LinearLayout>
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/gutter"
-                android:orientation="horizontal">
+            <View style="@style/Separator"/>
+
+            <!-- Tint -->
+            <LinearLayout style="@style/Segment">
 
                 <TextView
+                    style="@style/SubHeaderStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/gutter"
+                    android:text="Action button tint"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="7"
+                        android:text="Whether action button should be tinted"/>
+
+                    <ToggleButton
+                        android:id="@+id/widget_action_button_tint"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="false"/>
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <View style="@style/Separator"/>
+
+            <!-- show title -->
+            <LinearLayout style="@style/Segment">
+
+                <TextView
+                    style="@style/SubHeaderStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="Show title"/>
 
-                <ToggleButton
-                    android:id="@+id/widget_show_title"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:checked="true"/>
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="7"
+                        android:text="Sets whether the title should be shown in the custom tab"/>
+
+                    <ToggleButton
+                        android:id="@+id/widget_show_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_weight="1"
+                        android:checked="true"/>
+                </LinearLayout>
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/gutter"
-                android:orientation="horizontal">
+
+            <View style="@style/Separator"/>
+
+            <!-- exit animation -->
+            <LinearLayout style="@style/Segment">
 
                 <TextView
+                    style="@style/SubHeaderStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/gutter"
-                    android:text="Use custom animation"/>
+                    android:text="Animation"/>
 
-                <ToggleButton
-                    android:id="@+id/widget_custom_animation"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:checked="true"/>
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="7"
+                        android:text="Sets the exit animations"/>
+
+                    <ToggleButton
+                        android:id="@+id/widget_custom_animation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"/>
+                </LinearLayout>
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/gutter"
-                android:orientation="horizontal">
+            <View style="@style/Separator"/>
+
+            <!-- launch mode -->
+            <LinearLayout style="@style/Segment">
 
                 <TextView
+                    style="@style/SubHeaderStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Use close button"/>
+                    android:text="Launch Mode"/>
 
-                <ImageView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="@dimen/gutter"
-                    android:src="@drawable/ic_close"/>
+                    android:orientation="horizontal">
 
-                <ToggleButton
-                    android:id="@+id/widget_custom_close_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="false"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="7"
+                        android:text="Launch custom activity with any kind of bottom toolbar"/>
+
+                    <Spinner
+                        android:id="@+id/launch_mode_spinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:entries="@array/launch_mode"/>
+                </LinearLayout>
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/gutter"
-                android:orientation="horizontal">
+            <View style="@style/Separator"/>
+
+            <!-- Close button -->
+            <LinearLayout style="@style/Segment">
 
                 <TextView
+                    style="@style/SubHeaderStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/gutter"
-                    android:text="Launch mode"/>
+                    android:text="Close Button"/>
 
-                <Spinner
-                    android:id="@+id/launch_mode_spinner"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:entries="@array/launch_mode"/>
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:src="@drawable/ic_close"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="6"
+                        android:text="Sets the Close button icon for the custom tab"/>
+
+                    <ToggleButton
+                        android:id="@+id/widget_custom_close_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"/>
+                </LinearLayout>
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/gutter"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/gutter"
-                    android:text="Action Button enable tint"/>
-
-                <ToggleButton
-                    android:id="@+id/widget_action_button_tint"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="false"/>
-
-            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 
