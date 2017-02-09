@@ -8,6 +8,10 @@ This is a simple Andorid app to test [Custom tabs](https://developer.chrome.com/
 
 just like normal Android app.
 
+```bash
+./gradlew build
+```
+
 # License
 
 Mozilla Public License, v. 2.0. you can obtain a copy at [http://mozilla.org/MPL/2.0/](http://mozilla.org/MPL/2.0/)
