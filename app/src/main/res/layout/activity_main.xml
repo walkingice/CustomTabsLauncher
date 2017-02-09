@@ -168,8 +168,8 @@
 
                     <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
+                        android:layout_height="wrap_content"
+                        android:layout_weight="7">
                         <FrameLayout
                             android:layout_width="@dimen/small_widget_size"
                             android:layout_height="@dimen/small_widget_size"
@@ -183,14 +183,20 @@
                                 android:layout_height="match_parent"
                                 android:background="@color/colorAccent"/>
                         </FrameLayout>
-
                         <Spinner
                             android:id="@+id/bottom_color_spinner"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:entries="@array/selectable_colors"/>
-
                     </LinearLayout>
+
+                    <ToggleButton
+                        android:id="@+id/should_set_bottom_bar_color"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_weight="1"
+                        android:checked="true"/>
                 </LinearLayout>
             </LinearLayout>
 

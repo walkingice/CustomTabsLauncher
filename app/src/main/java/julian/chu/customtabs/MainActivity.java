@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private View mBottomColorPreview;
 
     private boolean mShouldCustomTopColor = true;
+    private boolean mShouldCustomBottomColor = true;
     private boolean mCustomAnimation = true;
     private boolean mCustomCloseBtn = false;
     private boolean mShowTitle = true;
@@ -211,6 +212,15 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
+        ((ToggleButton) findViewById(R.id.should_set_bottom_bar_color)).setOnCheckedChangeListener(
+                new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                        mShouldCustomBottomColor = b;
+                        refreshUI();
+                    }
+                });
+
         ((ToggleButton) findViewById(R.id.widget_custom_animation)).setOnCheckedChangeListener(
                 new CompoundButton.OnCheckedChangeListener() {
                     @Override
@@ -350,7 +360,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void setBottomToolbar(CustomTabsIntent.Builder builder, Mode mode) {
         // add toolbar items
-        builder.setSecondaryToolbarColor(mBottomBarColor);
+        if (mShouldCustomBottomColor) {
+            builder.setSecondaryToolbarColor(mBottomBarColor);
+        }
         if (mode == Mode.DEPRECATED) {
             deprecatedAddingToolbarItem(builder);
         } else {
