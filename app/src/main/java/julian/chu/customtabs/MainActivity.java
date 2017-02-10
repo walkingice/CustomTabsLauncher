@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean mShouldCustomTopColor = true;
     private boolean mShouldCustomBottomColor = true;
+    private boolean mShouldDefShareItem = false;
     private boolean mCustomAnimation = true;
     private boolean mCustomCloseBtn = false;
     private boolean mShouldShowTitle = true;
@@ -235,6 +236,7 @@ public class MainActivity extends AppCompatActivity {
     private void refreshUI() {
         findViewById(R.id.top_color_spinner).setEnabled(mShouldCustomTopColor);
         findViewById(R.id.bottom_color_spinner).setEnabled(mShouldCustomBottomColor);
+        findViewById(R.id.def_share_item_desc).setEnabled(mShouldDefShareItem);
         findViewById(R.id.exit_animation_desc).setEnabled(mCustomAnimation);
         findViewById(R.id.close_button_desc).setEnabled(mCustomCloseBtn);
         findViewById(R.id.show_title_desc).setEnabled(mShouldShowTitle);
@@ -254,6 +256,9 @@ public class MainActivity extends AppCompatActivity {
 
         ((ToggleButton) findViewById(R.id.should_set_bottom_bar_color)).setOnCheckedChangeListener(
                 buildCheckHandler("mShouldCustomBottomColor"));
+
+        ((ToggleButton) findViewById(R.id.should_set_def_share_item)).setOnCheckedChangeListener(
+                buildCheckHandler("mShouldDefShareItem"));
 
         ((ToggleButton) findViewById(R.id.widget_custom_animation)).setOnCheckedChangeListener(
                 buildCheckHandler("mCustomAnimation"));
@@ -346,6 +351,11 @@ public class MainActivity extends AppCompatActivity {
 
     private CustomTabsIntent.Builder createBuilder(Mode mode) {
         CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+
+        // set default share item
+        if (mShouldDefShareItem) {
+            builder.addDefaultShareMenuItem();
+        }
 
         // set action button
         if (mShouldActionBtn) {
