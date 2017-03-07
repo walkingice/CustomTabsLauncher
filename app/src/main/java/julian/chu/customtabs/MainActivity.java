@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean mShouldCustomTopColor = true;
     private boolean mShouldCustomBottomColor = true;
     private boolean mShouldDefShareItem = false;
-    private boolean mCustomAnimation = true;
+    private boolean mCustomAnimation = false;
     private boolean mCustomCloseBtn = false;
     private boolean mShouldShowTitle = true;
     private boolean mShouldActionBtn = true;
@@ -65,13 +65,6 @@ public class MainActivity extends AppCompatActivity {
     private boolean mShouldHardCode = false;
     private String mTargetPackage = null;
     private Mode mMode = Mode.NONE;
-
-    private enum Mode {
-        NONE,
-        NORMAL,
-        UGLY,
-        DEPRECATED
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -326,6 +319,8 @@ public class MainActivity extends AppCompatActivity {
                 return 0xFF8877FF;
             case "#00FFFFFF":
                 return 0x00FFFFFF;
+            case "#FFFFFFF1":
+                return 0xFFFFFFF1;
             case "#FFFFFFFF":
                 return 0xFFFFFFFF;
             case "#11FF0000":
@@ -485,5 +480,12 @@ public class MainActivity extends AppCompatActivity {
             CustomTabsIntent rebuiltIntent = createBuilder(mMode).build();
             rebuiltIntent.launchUrl(this, uri);
         }
+    }
+
+    private enum Mode {
+        NONE,
+        NORMAL,
+        UGLY,
+        DEPRECATED
     }
 }

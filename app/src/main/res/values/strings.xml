@@ -4,7 +4,10 @@
         <item>https://www.google.com.tw</item>
         <item>https://mozilla.org</item>
         <item>https://twitter.com</item>
+        <item>https://http.cat/200</item>
+        <item>http://httpstat.us/200</item>
         <item>http://stackoverflow.com</item>
+        <item>http://taobao.com</item>
         <item>https://en.wikipedia.org/wiki/Taiwan</item>
     </string-array>
     <string-array name="selectable_colors">
@@ -17,6 +20,7 @@
         <item>#FF8877FF</item>
         <item>#00FFFFFF</item>
         <item>#FFFFFFFF</item>
+        <item>#FFFFFFF1</item>
         <item>#11FF0000</item>
         <item>#55FF0000</item>
         <item>#AAFF0000</item>
