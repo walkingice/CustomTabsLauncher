@@ -46,8 +46,8 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQ_MOZILLA = 0x011A;
 
     private int mMenuItemNums = 3;
-    private int mTopBarColor = Color.MAGENTA;
-    private int mBottomBarColor = Color.MAGENTA;
+    private int mTopBarColor = Color.WHITE;
+    private int mBottomBarColor = Color.WHITE;
     private Bitmap mIcon;
     private Button mBtn0;
     private EditText mInput;

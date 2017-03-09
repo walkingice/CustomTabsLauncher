@@ -11,11 +11,11 @@
         <item>https://en.wikipedia.org/wiki/Taiwan</item>
     </string-array>
     <string-array name="selectable_colors">
+        <item>WHITE</item>
         <item>MAGENTA</item>
         <item>CYAN</item>
         <item>GREEN</item>
         <item>BLACK</item>
-        <item>WHITE</item>
         <item>Mozilla Red</item>
         <item>#FF8877FF</item>
         <item>#00FFFFFF</item>
