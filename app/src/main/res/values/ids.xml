@@ -5,4 +5,7 @@
     <item name="remote_btn_1" type="id"/>
     <item name="remote_btn_2" type="id"/>
     <item name="remote_btn_3" type="id"/>
+    <item name="menu_connect_service" type="id"/>
+    <item name="menu_warm_up" type="id"/>
+    <item name="menu_may_launch" type="id"/>
 </resources>

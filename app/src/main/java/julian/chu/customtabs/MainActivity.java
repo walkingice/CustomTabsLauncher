@@ -2,6 +2,7 @@ package julian.chu.customtabs;
 
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -12,14 +13,17 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.customtabs.CustomTabsClient;
 import android.support.customtabs.CustomTabsIntent;
+import android.support.customtabs.CustomTabsServiceConnection;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -66,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
     private String mTargetPackage = null;
     private Mode mMode = Mode.NONE;
 
+    private CustomTabsClient mServiceClient = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
         mIcon = getBitmap(R.drawable.small_logo);
         mBtn0 = (Button) findViewById(R.id.btn_0);
         mInput = (EditText) findViewById(R.id.edit_text);
-        setPreview();
         bindButton();
         setSpinners();
         setToggleButton();
@@ -91,10 +96,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_options, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem item = menu.add(Menu.NONE, R.id.action_button, Menu.NONE, "Settings");
-        item.setIcon(android.R.drawable.ic_menu_preferences);
-        MenuItemCompat.setShowAsAction(item, MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
+        menu.findItem(R.id.menu_connect_service).setEnabled(mServiceClient == null);
+        menu.findItem(R.id.menu_warm_up).setEnabled(mServiceClient != null);
+        menu.findItem(R.id.menu_may_launch).setEnabled(mServiceClient != null);
+
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -107,10 +120,70 @@ public class MainActivity extends AppCompatActivity {
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 break;
+            case R.id.menu_connect_service:
+                onConnectService();
+                break;
+            case R.id.menu_warm_up:
+                onWarmUp();
+                break;
+            case R.id.menu_may_launch:
+                onMayLaunch();
+                break;
             default:
                 return super.onOptionsItemSelected(item);
         }
         return true;
+    }
+
+    private synchronized void onConnectService() {
+        final Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://"));
+        final ResolveInfo info = getPackageManager()
+                .resolveActivity(browserIntent, PackageManager.MATCH_DEFAULT_ONLY);
+        final String pkgName = (mShouldHardCode && mTargetPackage != null)
+                ? mTargetPackage
+                : info.activityInfo.packageName;
+
+        if (TextUtils.isEmpty(pkgName)) {
+            prompt("No service to connect");
+            return;
+        }
+
+        CustomTabsServiceConnection connection = new CustomTabsServiceConnection() {
+            @Override
+            public void onCustomTabsServiceConnected(ComponentName name, CustomTabsClient client) {
+                mServiceClient = client;
+                prompt(pkgName + " connected");
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName componentName) {
+                mServiceClient = null;
+                prompt(pkgName + " disconnected");
+            }
+        };
+
+        boolean success = CustomTabsClient.bindCustomTabsService(this, pkgName, connection);
+        if (!success) {
+            prompt("Connect fail");
+        }
+    }
+
+    private synchronized void onWarmUp() {
+        if (mServiceClient == null) {
+            return;
+        }
+
+        String msg = mServiceClient.warmup(0l)
+                ? "War up success"
+                : "Warm up fail";
+        prompt(msg);
+    }
+
+    private synchronized void onMayLaunch() {
+        if (mServiceClient == null) {
+            return;
+        }
+        prompt("Not implement yet");
     }
 
     private void initActionBar() {
@@ -120,10 +193,6 @@ public class MainActivity extends AppCompatActivity {
 
     private Bitmap getBitmap(int res) {
         return BitmapFactory.decodeResource(getResources(), res);
-    }
-
-    private void setPreview() {
-
     }
 
     private void bindButton() {
@@ -480,6 +549,10 @@ public class MainActivity extends AppCompatActivity {
             CustomTabsIntent rebuiltIntent = createBuilder(mMode).build();
             rebuiltIntent.launchUrl(this, uri);
         }
+    }
+
+    private void prompt(CharSequence text) {
+        Toast.makeText(MainActivity.this, text, Toast.LENGTH_SHORT).show();
     }
 
     private enum Mode {
