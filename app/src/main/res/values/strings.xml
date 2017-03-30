@@ -30,6 +30,15 @@
         <item>#AA00FF00</item>
         <item>#EE00FF00</item>
     </string-array>
+
+    <string-array name="selectable_drawables">
+        <item>Default</item>
+        <item>With Background</item>
+        <item>Small</item>
+        <item>Large</item>
+        <item>Default Share</item>
+    </string-array>
+
     <string-array name="menu_item_nums">
         <item>3</item>
         <item>0</item>

@@ -33,6 +33,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RemoteViews;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -80,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
         mSupportPackages = getSupportPackagesName();
 
-        mIcon = getBitmap(R.drawable.small_logo);
+        mIcon = getBitmap(R.drawable.ic_ab);
         mBtn0 = (Button) findViewById(R.id.btn_0);
         mInput = (EditText) findViewById(R.id.edit_text);
         bindButton();
@@ -255,6 +256,33 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // change action button icon
+        ((Spinner) findViewById(R.id.action_button_drawable_spinner)).setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String[] texts = getResources().getStringArray(R.array.selectable_drawables);
+                String drawableText = texts[i];
+                if ("With Background".equals(drawableText)) {
+                    mIcon = getBitmap(R.drawable.ic_ab_background);
+                } else if ("Default Share".equals(drawableText)) {
+                    mIcon = getBitmap(android.R.drawable.ic_menu_share);
+                } else if ("Large".equals(drawableText)) {
+                    mIcon = getBitmap(R.drawable.ic_ab_lg);
+                } else if ("Small".equals(drawableText)) {
+                    mIcon = getBitmap(R.drawable.ic_ab_xs);
+                } else {
+                    // default
+                    mIcon = getBitmap(R.drawable.ic_ab);
+                }
+
+                refreshUI();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+
         ((Spinner) findViewById(R.id.launch_mode_spinner)).setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -305,8 +333,9 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.top_color_preview).setBackgroundColor(mTopBarColor);
         findViewById(R.id.bottom_color_preview).setBackgroundColor(mBottomBarColor);
 
+        ((ImageView) findViewById(R.id.action_button_preview)).setImageBitmap(mIcon);
 
-        findViewById(R.id.action_button_desc).setEnabled(mShouldActionBtn);
+        findViewById(R.id.action_button_drawable_spinner).setEnabled(mShouldActionBtn);
         findViewById(R.id.widget_action_button_tint).setEnabled(mShouldActionBtn);
         findViewById(R.id.action_button_tint_desc).setEnabled(mShouldActionBtn && mShouldActionBtnTint);
         findViewById(R.id.hard_code_spinner).setEnabled(mShouldHardCode);

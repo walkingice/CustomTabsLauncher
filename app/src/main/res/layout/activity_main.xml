@@ -245,19 +245,38 @@
                     style="@style/SubHeaderStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Enable Action Button"/>
+                    android:text="Action Button"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/action_button_desc"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="7"
-                        android:text="Should to enable action button"/>
+                        android:layout_weight="7">
+
+                        <FrameLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="@dimen/gutter"
+                            android:padding="1dp">
+
+                            <ImageView
+                                android:id="@+id/action_button_preview"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:src="@drawable/logo"/>
+                        </FrameLayout>
+
+                        <Spinner
+                            android:id="@+id/action_button_drawable_spinner"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:entries="@array/selectable_drawables"/>
+
+                    </LinearLayout>
 
                     <ToggleButton
                         android:id="@+id/widget_action_button"
@@ -267,6 +286,7 @@
                         android:checked="true"/>
 
                 </LinearLayout>
+
             </LinearLayout>
 
             <View style="@style/Separator"/>
