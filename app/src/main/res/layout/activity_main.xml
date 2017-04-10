@@ -324,6 +324,59 @@
 
             <View style="@style/Separator"/>
 
+            <!-- Close button -->
+            <LinearLayout style="@style/Segment">
+
+                <TextView
+                    style="@style/SubHeaderStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Close Button"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="7">
+
+                        <FrameLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="@dimen/gutter"
+                            android:padding="1dp">
+
+                            <ImageView
+                                android:id="@+id/close_button_preview"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:src="@drawable/ic_close"/>
+                        </FrameLayout>
+
+                        <Spinner
+                            android:id="@+id/close_button_drawable_spinner"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:entries="@array/selectable_drawables"/>
+
+                    </LinearLayout>
+
+                    <ToggleButton
+                        android:id="@+id/widget_close_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="false"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <View style="@style/Separator"/>
+
             <!-- show title -->
             <LinearLayout style="@style/Segment">
 
@@ -415,43 +468,6 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:entries="@array/launch_mode"/>
-                </LinearLayout>
-            </LinearLayout>
-
-            <View style="@style/Separator"/>
-
-            <!-- Close button -->
-            <LinearLayout style="@style/Segment">
-
-                <TextView
-                    style="@style/SubHeaderStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Close Button"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <ImageButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:src="@drawable/ic_close"/>
-
-                    <TextView
-                        android:id="@+id/close_button_desc"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="6"
-                        android:text="Sets the Close button icon for the custom tab"/>
-
-                    <ToggleButton
-                        android:id="@+id/widget_custom_close_btn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checked="false"/>
                 </LinearLayout>
             </LinearLayout>
 

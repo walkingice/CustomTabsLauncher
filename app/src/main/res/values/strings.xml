@@ -36,7 +36,7 @@
         <item>With Background</item>
         <item>Small</item>
         <item>Large</item>
-        <item>Default Share</item>
+        <item>System</item>
     </string-array>
 
     <string-array name="menu_item_nums">

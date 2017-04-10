@@ -53,7 +53,8 @@ public class MainActivity extends AppCompatActivity {
     private int mMenuItemNums = 3;
     private int mTopBarColor = Color.WHITE;
     private int mBottomBarColor = Color.WHITE;
-    private Bitmap mIcon;
+    private Bitmap mActionButtonIcon;
+    private Bitmap mCloseButtonIcon;
     private Button mBtn0;
     private EditText mInput;
 
@@ -63,10 +64,10 @@ public class MainActivity extends AppCompatActivity {
     private boolean mShouldCustomBottomColor = true;
     private boolean mShouldDefShareItem = false;
     private boolean mCustomAnimation = false;
-    private boolean mCustomCloseBtn = false;
     private boolean mShouldShowTitle = true;
     private boolean mShouldActionBtn = true;
     private boolean mShouldActionBtnTint = false;
+    private boolean mShouldCloseBtn = false;
     private boolean mShouldHardCode = false;
     private String mTargetPackage = null;
     private Mode mMode = Mode.NONE;
@@ -81,7 +82,8 @@ public class MainActivity extends AppCompatActivity {
 
         mSupportPackages = getSupportPackagesName();
 
-        mIcon = getBitmap(R.drawable.ic_ab);
+        mActionButtonIcon = getBitmap(R.drawable.ic_ab);
+        mCloseButtonIcon = getBitmap(R.drawable.ic_close);
         mBtn0 = (Button) findViewById(R.id.btn_0);
         mInput = (EditText) findViewById(R.id.edit_text);
         bindButton();
@@ -263,16 +265,43 @@ public class MainActivity extends AppCompatActivity {
                 String[] texts = getResources().getStringArray(R.array.selectable_drawables);
                 String drawableText = texts[i];
                 if ("With Background".equals(drawableText)) {
-                    mIcon = getBitmap(R.drawable.ic_ab_background);
-                } else if ("Default Share".equals(drawableText)) {
-                    mIcon = getBitmap(android.R.drawable.ic_menu_share);
+                    mActionButtonIcon = getBitmap(R.drawable.ic_ab_background);
+                } else if ("System".equals(drawableText)) {
+                    mActionButtonIcon = getBitmap(android.R.drawable.ic_menu_share);
                 } else if ("Large".equals(drawableText)) {
-                    mIcon = getBitmap(R.drawable.ic_ab_lg);
+                    mActionButtonIcon = getBitmap(R.drawable.ic_ab_lg);
                 } else if ("Small".equals(drawableText)) {
-                    mIcon = getBitmap(R.drawable.ic_ab_xs);
+                    mActionButtonIcon = getBitmap(R.drawable.ic_ab_xs);
                 } else {
                     // default
-                    mIcon = getBitmap(R.drawable.ic_ab);
+                    mActionButtonIcon = getBitmap(R.drawable.ic_ab);
+                }
+
+                refreshUI();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+
+        // change close button icon
+        ((Spinner) findViewById(R.id.close_button_drawable_spinner)).setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String[] texts = getResources().getStringArray(R.array.selectable_drawables);
+                String drawableText = texts[i];
+                if ("With Background".equals(drawableText)) {
+                    mCloseButtonIcon = getBitmap(R.drawable.ic_close_background);
+                } else if ("System".equals(drawableText)) {
+                    mCloseButtonIcon = getBitmap(android.R.drawable.ic_menu_close_clear_cancel);
+                } else if ("Large".equals(drawableText)) {
+                    mCloseButtonIcon = getBitmap(R.drawable.ic_close_lg);
+                } else if ("Small".equals(drawableText)) {
+                    mCloseButtonIcon = getBitmap(R.drawable.ic_close_xs);
+                } else {
+                    // default
+                    mCloseButtonIcon = getBitmap(R.drawable.ic_close);
                 }
 
                 refreshUI();
@@ -328,16 +357,19 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.bottom_color_spinner).setEnabled(mShouldCustomBottomColor);
         findViewById(R.id.def_share_item_desc).setEnabled(mShouldDefShareItem);
         findViewById(R.id.exit_animation_desc).setEnabled(mCustomAnimation);
-        findViewById(R.id.close_button_desc).setEnabled(mCustomCloseBtn);
         findViewById(R.id.show_title_desc).setEnabled(mShouldShowTitle);
         findViewById(R.id.top_color_preview).setBackgroundColor(mTopBarColor);
         findViewById(R.id.bottom_color_preview).setBackgroundColor(mBottomBarColor);
 
-        ((ImageView) findViewById(R.id.action_button_preview)).setImageBitmap(mIcon);
+        ((ImageView) findViewById(R.id.action_button_preview)).setImageBitmap(mActionButtonIcon);
+        ((ImageView) findViewById(R.id.close_button_preview)).setImageBitmap(mCloseButtonIcon);
 
         findViewById(R.id.action_button_drawable_spinner).setEnabled(mShouldActionBtn);
         findViewById(R.id.widget_action_button_tint).setEnabled(mShouldActionBtn);
         findViewById(R.id.action_button_tint_desc).setEnabled(mShouldActionBtn && mShouldActionBtnTint);
+
+        findViewById(R.id.close_button_drawable_spinner).setEnabled(mShouldCloseBtn);
+
         findViewById(R.id.hard_code_spinner).setEnabled(mShouldHardCode);
     }
 
@@ -354,14 +386,14 @@ public class MainActivity extends AppCompatActivity {
         ((ToggleButton) findViewById(R.id.widget_custom_animation)).setOnCheckedChangeListener(
                 buildCheckHandler("mCustomAnimation"));
 
-        ((ToggleButton) findViewById(R.id.widget_custom_close_btn)).setOnCheckedChangeListener(
-                buildCheckHandler("mCustomCloseBtn"));
-
         ((ToggleButton) findViewById(R.id.widget_show_title)).setOnCheckedChangeListener(
                 buildCheckHandler("mShouldShowTitle"));
 
         ((ToggleButton) findViewById(R.id.widget_action_button)).setOnCheckedChangeListener(
                 buildCheckHandler("mShouldActionBtn"));
+
+        ((ToggleButton) findViewById(R.id.widget_close_button)).setOnCheckedChangeListener(
+                buildCheckHandler("mShouldCloseBtn"));
 
         ((ToggleButton) findViewById(R.id.widget_action_button_tint)).setOnCheckedChangeListener(
                 buildCheckHandler("mShouldActionBtnTint"));
@@ -452,10 +484,15 @@ public class MainActivity extends AppCompatActivity {
 
         // set action button
         if (mShouldActionBtn) {
-            builder.setActionButton(mIcon,
+            builder.setActionButton(mActionButtonIcon,
                     "The initium",
                     createIntent(REQ_INITIUM, "https://theinitium.com/"),
                     mShouldActionBtnTint);
+        }
+
+        // set close button
+        if (mShouldCloseBtn) {
+            builder.setCloseButtonIcon(mCloseButtonIcon);
         }
 
         if (mShouldCustomTopColor) {
@@ -471,11 +508,6 @@ public class MainActivity extends AppCompatActivity {
         if (mCustomAnimation) {
             builder.setStartAnimations(this, R.anim.push_down_in, R.anim.push_down_out);
             builder.setExitAnimations(this, R.anim.push_up_in, R.anim.push_up_out);
-        }
-
-
-        if (mCustomCloseBtn) {
-            builder.setCloseButtonIcon(getBitmap(R.drawable.ic_close));
         }
 
         if (mode != Mode.NONE) {
