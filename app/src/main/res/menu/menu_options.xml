@@ -18,4 +18,8 @@
         android:id="@id/menu_may_launch"
         android:checkable="false"
         android:title="May Launch" />
+    <item
+        android:id="@id/menu_edit_url"
+        android:checkable="false"
+        android:title="Edit Url" />
 </menu>

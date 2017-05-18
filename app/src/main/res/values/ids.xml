@@ -8,4 +8,5 @@
     <item name="menu_connect_service" type="id"/>
     <item name="menu_warm_up" type="id"/>
     <item name="menu_may_launch" type="id"/>
+    <item name="menu_edit_url" type="id"/>
 </resources>

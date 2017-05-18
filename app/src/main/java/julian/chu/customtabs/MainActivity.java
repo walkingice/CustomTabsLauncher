@@ -3,7 +3,9 @@ package julian.chu.customtabs;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
@@ -12,16 +14,20 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.customtabs.CustomTabsClient;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.customtabs.CustomTabsServiceConnection;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -41,6 +47,7 @@ import android.widget.ToggleButton;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -49,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "TabLauncher";
     private static final int REQ_INITIUM = 0x1122;
     private static final int REQ_MOZILLA = 0x011A;
+
+    private static final String KEY_USER_INPUT_URL = "_the_url_input_by_user_";
 
     private int mMenuItemNums = 3;
     private int mTopBarColor = Color.WHITE;
@@ -74,11 +83,14 @@ public class MainActivity extends AppCompatActivity {
 
     private CustomTabsClient mServiceClient = null;
 
+    private String mUserInputUrl;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initActionBar();
+        restorePreferences();
 
         mSupportPackages = getSupportPackagesName();
 
@@ -96,6 +108,24 @@ public class MainActivity extends AppCompatActivity {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimary));
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        storePreferences();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle bundle) {
+        super.onSaveInstanceState(bundle);
+        bundle.putString(KEY_USER_INPUT_URL, mUserInputUrl);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle bundle) {
+        super.onRestoreInstanceState(bundle);
+        mUserInputUrl = bundle.getString(KEY_USER_INPUT_URL, "");
     }
 
     @Override
@@ -131,6 +161,9 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.menu_may_launch:
                 onMayLaunch();
+                break;
+            case R.id.menu_edit_url:
+                onEditUrlClicked();
                 break;
             default:
                 return super.onOptionsItemSelected(item);
@@ -189,6 +222,30 @@ public class MainActivity extends AppCompatActivity {
         prompt("Not implement yet");
     }
 
+    private void onEditUrlClicked() {
+        final LayoutInflater inflater = getLayoutInflater();
+        final View content = inflater.inflate(R.layout.layout_input_dialog, null);
+        final EditText editText = (EditText) content.findViewById(R.id.edit_text);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        editText.setText(mUserInputUrl);
+        builder.setView(content);
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                mUserInputUrl = editText.getText().toString();
+                refreshUI();
+            }
+        });
+        builder.setNeutralButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        builder.show();
+    }
+
     private void initActionBar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
@@ -196,6 +253,18 @@ public class MainActivity extends AppCompatActivity {
 
     private Bitmap getBitmap(int res) {
         return BitmapFactory.decodeResource(getResources(), res);
+    }
+
+    private void restorePreferences() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        mUserInputUrl = preferences.getString(KEY_USER_INPUT_URL, "");
+    }
+
+    private void storePreferences() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(KEY_USER_INPUT_URL, mUserInputUrl);
+        editor.commit();
     }
 
     private void bindButton() {
@@ -211,7 +280,7 @@ public class MainActivity extends AppCompatActivity {
         ((Spinner) findViewById(R.id.urls_spinner)).setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String[] urls = getResources().getStringArray(R.array.selectable_urls);
+                String[] urls = getSelectableUrls();
                 mInput.setText(urls[i]);
             }
 
@@ -371,6 +440,15 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.close_button_drawable_spinner).setEnabled(mShouldCloseBtn);
 
         findViewById(R.id.hard_code_spinner).setEnabled(mShouldHardCode);
+
+        final Spinner urlSpinner = (Spinner) findViewById(R.id.urls_spinner);
+        String[] urls = getSelectableUrls();
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_spinner_item,
+                urls);
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        urlSpinner.setAdapter(spinnerArrayAdapter);
     }
 
     private void setToggleButton() {
@@ -400,6 +478,17 @@ public class MainActivity extends AppCompatActivity {
 
         ((ToggleButton) findViewById(R.id.widget_hard_code)).setOnCheckedChangeListener(
                 buildCheckHandler("mShouldHardCode"));
+    }
+
+    @NonNull
+    private String[] getSelectableUrls() {
+        final String[] selectable = getResources().getStringArray(R.array.selectable_urls);
+        ArrayList<String> urls = new ArrayList<>();
+        urls.addAll(Arrays.asList(selectable));
+        if (!TextUtils.isEmpty(mUserInputUrl)) {
+            urls.add(mUserInputUrl);
+        }
+        return urls.toArray(new String[urls.size()]);
     }
 
     /**

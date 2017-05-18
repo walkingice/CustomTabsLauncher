@@ -53,6 +53,7 @@
                     android:inputType="textUri"
                     android:text="https://www.google.com.tw"/>
 
+                <!-- content is assigned in Java file -->
                 <Spinner
                     android:id="@+id/urls_spinner"
                     android:layout_width="wrap_content"
@@ -60,7 +61,6 @@
                     android:layout_gravity="end"
                     android:layout_marginTop="5dp"
                     android:layout_weight="1"
-                    android:entries="@array/selectable_urls"
                     />
             </LinearLayout>
 
