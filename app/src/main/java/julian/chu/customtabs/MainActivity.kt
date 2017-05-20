@@ -315,7 +315,7 @@ class MainActivity : AppCompatActivity() {
                 map.put(1, Mode.NORMAL)
                 map.put(2, Mode.UGLY)
                 map.put(3, Mode.DEPRECATED)
-                mMode = map[i]
+                mMode = map[i] as Mode
             }
 
             override fun onNothingSelected(adapterView: AdapterView<*>) {}
@@ -329,7 +329,7 @@ class MainActivity : AppCompatActivity() {
         hardCodeSpinner.adapter = spinnerAdapter
         spinnerAdapter.notifyDataSetChanged()
         hardCodeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(adapterView: AdapterView<*>, view: View, i: Int, l: Long) {
+            override fun onItemSelected(adapterView: AdapterView<*>, view: View?, i: Int, l: Long) {
                 if (mSupportPackages!!.size < 1) {
                     return
                 }
@@ -406,7 +406,7 @@ class MainActivity : AppCompatActivity() {
             val urls = ArrayList<String>()
             urls.addAll(Arrays.asList(*selectable))
             if (!TextUtils.isEmpty(mUserInputUrl)) {
-                urls.add(mUserInputUrl)
+                urls.add(mUserInputUrl as String)
             }
             return urls.toTypedArray()
         }
