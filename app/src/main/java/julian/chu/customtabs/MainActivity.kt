@@ -300,11 +300,11 @@ class MainActivity : AppCompatActivity() {
         (findViewById(R.id.launch_mode_spinner) as Spinner).onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(adapterView: AdapterView<*>, view: View, i: Int, l: Long) {
                 // Yes, I hard-coded, bite me!
-                val map = HashMap<Int, Mode>()
-                map.put(0, Mode.NONE)
-                map.put(1, Mode.NORMAL)
-                map.put(2, Mode.UGLY)
-                map.put(3, Mode.DEPRECATED)
+                val map = mapOf(
+                        0 to Mode.NONE,
+                        1 to Mode.NORMAL,
+                        2 to Mode.UGLY,
+                        3 to Mode.DEPRECATED)
                 mMode = map[i] as Mode
             }
 
