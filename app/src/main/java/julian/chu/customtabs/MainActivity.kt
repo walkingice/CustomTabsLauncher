@@ -263,20 +263,15 @@ class MainActivity : AppCompatActivity() {
         (findViewById(R.id.action_button_drawable_spinner) as Spinner).onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(adapterView: AdapterView<*>, view: View, i: Int, l: Long) {
                 val texts = resources.getStringArray(R.array.selectable_drawables)
-                val drawableText = texts[i]
-                if ("With Background" == drawableText) {
-                    mActionButtonIcon = getBitmap(R.drawable.ic_ab_background)
-                } else if ("System" == drawableText) {
-                    mActionButtonIcon = getBitmap(android.R.drawable.ic_menu_share)
-                } else if ("Large" == drawableText) {
-                    mActionButtonIcon = getBitmap(R.drawable.ic_ab_lg)
-                } else if ("Small" == drawableText) {
-                    mActionButtonIcon = getBitmap(R.drawable.ic_ab_xs)
-                } else {
-                    // default
-                    mActionButtonIcon = getBitmap(R.drawable.ic_ab)
+                val res = when (texts[i]) {
+                    "With Background" -> R.drawable.ic_ab_background
+                    "System" -> android.R.drawable.ic_menu_share
+                    "Large" -> R.drawable.ic_ab_lg
+                    "Small" -> R.drawable.ic_ab_xs
+                    else -> R.drawable.ic_ab
                 }
 
+                mActionButtonIcon = getBitmap(res)
                 refreshUI()
             }
 
@@ -288,17 +283,12 @@ class MainActivity : AppCompatActivity() {
             override fun onItemSelected(adapterView: AdapterView<*>, view: View, i: Int, l: Long) {
                 val texts = resources.getStringArray(R.array.selectable_drawables)
                 val drawableText = texts[i]
-                if ("With Background" == drawableText) {
-                    mCloseButtonIcon = getBitmap(R.drawable.ic_close_background)
-                } else if ("System" == drawableText) {
-                    mCloseButtonIcon = getBitmap(android.R.drawable.ic_menu_close_clear_cancel)
-                } else if ("Large" == drawableText) {
-                    mCloseButtonIcon = getBitmap(R.drawable.ic_close_lg)
-                } else if ("Small" == drawableText) {
-                    mCloseButtonIcon = getBitmap(R.drawable.ic_close_xs)
-                } else {
-                    // default
-                    mCloseButtonIcon = getBitmap(R.drawable.ic_close)
+                mCloseButtonIcon = when (drawableText) {
+                    "With Background" -> getBitmap(R.drawable.ic_close_background)
+                    "System" -> getBitmap(android.R.drawable.ic_menu_close_clear_cancel)
+                    "Large" -> getBitmap(R.drawable.ic_close_lg)
+                    "Small" -> getBitmap(R.drawable.ic_close_xs)
+                    else -> getBitmap(R.drawable.ic_close)
                 }
 
                 refreshUI()
