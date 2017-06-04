@@ -167,10 +167,7 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        val msg = if (mServiceClient!!.warmup(0L))
-            "War up success"
-        else
-            "Warm up fail"
+        val msg = if (mServiceClient!!.warmup(0L)) "War up success" else "Warm up fail"
         prompt(msg)
     }
 
