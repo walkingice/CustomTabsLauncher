@@ -30,6 +30,8 @@ import android.view.WindowManager
 import android.widget.*
 import java.util.*
 
+typealias CompBtnListener = CompoundButton.OnCheckedChangeListener
+
 class MainActivity : AppCompatActivity() {
 
     private var mMenuItemNums = 3
@@ -408,8 +410,8 @@ class MainActivity : AppCompatActivity() {
      * *
      * @return a handler for CompoundButton.setOnCheckedChangeListener
      */
-    private fun buildCheckHandler(fieldName: String): CompoundButton.OnCheckedChangeListener {
-        return CompoundButton.OnCheckedChangeListener { compoundButton, b ->
+    private fun buildCheckHandler(fieldName: String): CompBtnListener {
+        return CompBtnListener { compoundButton, b ->
             val clazz = this@MainActivity.javaClass
             try {
                 val f = clazz.getDeclaredField(fieldName)
