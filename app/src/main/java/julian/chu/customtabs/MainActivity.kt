@@ -44,15 +44,15 @@ class MainActivity : AppCompatActivity() {
 
     private var mSupportPackages: List<String>? = null
 
-    private val mShouldCustomTopColor = true
-    private val mShouldCustomBottomColor = true
-    private val mShouldDefShareItem = false
-    private val mCustomAnimation = false
-    private val mShouldShowTitle = true
-    private val mShouldActionBtn = true
-    private val mShouldActionBtnTint = false
-    private val mShouldCloseBtn = false
-    private val mShouldHardCode = false
+    private var mShouldCustomTopColor = true
+    private var mShouldCustomBottomColor = true
+    private var mShouldDefShareItem = false
+    private var mCustomAnimation = false
+    private var mShouldShowTitle = true
+    private var mShouldActionBtn = true
+    private var mShouldActionBtnTint = false
+    private var mShouldCloseBtn = false
+    private var mShouldHardCode = false
     private var mTargetPackage: String? = null
     private var mMode = Mode.NONE
 
@@ -220,95 +220,75 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setSpinners() {
-        (findViewById(R.id.urls_spinner) as Spinner).onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(adapterView: AdapterView<*>, view: View, i: Int, l: Long) {
-                val urls = selectableUrls
-                mInput!!.setText(urls[i])
-            }
 
-            override fun onNothingSelected(adapterView: AdapterView<*>) {}
+        // a helper function to build Listener
+        fun build(cb: (Int) -> Unit): AdapterView.OnItemSelectedListener {
+            return object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(adapterView: AdapterView<*>, view: View, idx: Int, l: Long) {
+                    cb(idx)
+                    refreshUI()
+                }
+
+                override fun onNothingSelected(adapterView: AdapterView<*>) {}
+            }
         }
 
-        (findViewById(R.id.menu_item_spinner) as Spinner).onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(adapterView: AdapterView<*>, view: View, i: Int, l: Long) {
-                val nums = resources.getStringArray(R.array.menu_item_nums)
-                mMenuItemNums = Integer.parseInt(nums[i])
-                mMenuItemNums = Math.min(mMenuItemNums, 5)
-                mMenuItemNums = Math.max(mMenuItemNums, 0)
-            }
+        (findViewById(R.id.urls_spinner) as Spinner).onItemSelectedListener = build({ idx ->
+            val urls = selectableUrls
+            mInput!!.setText(urls[idx])
+        })
 
-            override fun onNothingSelected(adapterView: AdapterView<*>) {}
-        }
+        (findViewById(R.id.menu_item_spinner) as Spinner).onItemSelectedListener = build({ idx ->
+            val nums = resources.getStringArray(R.array.menu_item_nums)
+            mMenuItemNums = Integer.parseInt(nums[idx])
+            mMenuItemNums = Math.min(mMenuItemNums, 5)
+            mMenuItemNums = Math.max(mMenuItemNums, 0)
 
-        (findViewById(R.id.top_color_spinner) as Spinner).onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(adapterView: AdapterView<*>, view: View, i: Int, l: Long) {
-                mTopBarColor = getColorByIdx(i)
-                refreshUI()
-            }
+        })
 
-            override fun onNothingSelected(adapterView: AdapterView<*>) {}
-        }
+        (findViewById(R.id.top_color_spinner) as Spinner).onItemSelectedListener = build({ idx ->
+            mTopBarColor = getColorByIdx(idx)
+        })
 
-        (findViewById(R.id.bottom_color_spinner) as Spinner).onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(adapterView: AdapterView<*>, view: View, i: Int, l: Long) {
-                mBottomBarColor = getColorByIdx(i)
-                refreshUI()
-            }
-
-            override fun onNothingSelected(adapterView: AdapterView<*>) {}
-        }
+        (findViewById(R.id.bottom_color_spinner) as Spinner).onItemSelectedListener = build({ idx ->
+            mBottomBarColor = getColorByIdx(idx)
+        })
 
         // change action button icon
-        (findViewById(R.id.action_button_drawable_spinner) as Spinner).onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(adapterView: AdapterView<*>, view: View, i: Int, l: Long) {
-                val texts = resources.getStringArray(R.array.selectable_drawables)
-                val res = when (texts[i]) {
-                    "With Background" -> R.drawable.ic_ab_background
-                    "System" -> android.R.drawable.ic_menu_share
-                    "Large" -> R.drawable.ic_ab_lg
-                    "Small" -> R.drawable.ic_ab_xs
-                    else -> R.drawable.ic_ab
-                }
-
-                mActionButtonIcon = getBitmap(res)
-                refreshUI()
+        (findViewById(R.id.action_button_drawable_spinner) as Spinner).onItemSelectedListener = build({ idx ->
+            val texts = resources.getStringArray(R.array.selectable_drawables)
+            val res = when (texts[idx]) {
+                "With Background" -> R.drawable.ic_ab_background
+                "System" -> android.R.drawable.ic_menu_share
+                "Large" -> R.drawable.ic_ab_lg
+                "Small" -> R.drawable.ic_ab_xs
+                else -> R.drawable.ic_ab
             }
-
-            override fun onNothingSelected(adapterView: AdapterView<*>) {}
-        }
+            mActionButtonIcon = getBitmap(res)
+        })
 
         // change close button icon
-        (findViewById(R.id.close_button_drawable_spinner) as Spinner).onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(adapterView: AdapterView<*>, view: View, i: Int, l: Long) {
-                val texts = resources.getStringArray(R.array.selectable_drawables)
-                val drawableText = texts[i]
-                mCloseButtonIcon = when (drawableText) {
-                    "With Background" -> getBitmap(R.drawable.ic_close_background)
-                    "System" -> getBitmap(android.R.drawable.ic_menu_close_clear_cancel)
-                    "Large" -> getBitmap(R.drawable.ic_close_lg)
-                    "Small" -> getBitmap(R.drawable.ic_close_xs)
-                    else -> getBitmap(R.drawable.ic_close)
-                }
-
-                refreshUI()
+        (findViewById(R.id.close_button_drawable_spinner) as Spinner).onItemSelectedListener = build({ idx ->
+            val texts = resources.getStringArray(R.array.selectable_drawables)
+            val drawableText = texts[idx]
+            mCloseButtonIcon = when (drawableText) {
+                "With Background" -> getBitmap(R.drawable.ic_close_background)
+                "System" -> getBitmap(android.R.drawable.ic_menu_close_clear_cancel)
+                "Large" -> getBitmap(R.drawable.ic_close_lg)
+                "Small" -> getBitmap(R.drawable.ic_close_xs)
+                else -> getBitmap(R.drawable.ic_close)
             }
+        })
 
-            override fun onNothingSelected(adapterView: AdapterView<*>) {}
-        }
-
-        (findViewById(R.id.launch_mode_spinner) as Spinner).onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(adapterView: AdapterView<*>, view: View, i: Int, l: Long) {
-                // Yes, I hard-coded, bite me!
-                val map = mapOf(
-                        0 to Mode.NONE,
-                        1 to Mode.NORMAL,
-                        2 to Mode.UGLY,
-                        3 to Mode.DEPRECATED)
-                mMode = map[i] as Mode
-            }
-
-            override fun onNothingSelected(adapterView: AdapterView<*>) {}
-        }
+        (findViewById(R.id.launch_mode_spinner) as Spinner).onItemSelectedListener = build({ idx ->
+            // Yes, I hard-coded, bite me!
+            val map = mapOf(
+                    0 to Mode.NONE,
+                    1 to Mode.NORMAL,
+                    2 to Mode.UGLY,
+                    3 to Mode.DEPRECATED)
+            mMode = map[idx] as Mode
+        })
 
         val hardCodeSpinner = findViewById(R.id.hard_code_spinner) as Spinner
         val spinnerAdapter = ArrayAdapter(this,
@@ -317,6 +297,7 @@ class MainActivity : AppCompatActivity() {
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         hardCodeSpinner.adapter = spinnerAdapter
         spinnerAdapter.notifyDataSetChanged()
+        // view might be null, so we don't use build function
         hardCodeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(adapterView: AdapterView<*>, view: View?, i: Int, l: Long) {
                 if (mSupportPackages!!.size < 1) {
@@ -361,32 +342,26 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setToggleButton() {
-        (findViewById(R.id.set_top_color) as ToggleButton).setOnCheckedChangeListener(
-                buildCheckHandler("mShouldCustomTopColor"))
+        // map view-id to listener
+        val map = mapOf<Int, (Boolean) -> Unit>(
+                R.id.set_top_color to { b -> mShouldCustomTopColor = b },
+                R.id.should_set_bottom_bar_color to { b -> mShouldCustomBottomColor = b },
+                R.id.should_set_def_share_item to { b -> mShouldDefShareItem = b },
+                R.id.widget_custom_animation to { b -> mCustomAnimation = b },
+                R.id.widget_show_title to { b -> mShouldShowTitle = b },
+                R.id.widget_action_button to { b -> mShouldActionBtn = b },
+                R.id.widget_close_button to { b -> mShouldCloseBtn = b },
+                R.id.widget_action_button_tint to { b -> mShouldActionBtnTint = b },
+                R.id.widget_hard_code to { b -> mShouldHardCode = b }
+        )
 
-        (findViewById(R.id.should_set_bottom_bar_color) as ToggleButton).setOnCheckedChangeListener(
-                buildCheckHandler("mShouldCustomBottomColor"))
-
-        (findViewById(R.id.should_set_def_share_item) as ToggleButton).setOnCheckedChangeListener(
-                buildCheckHandler("mShouldDefShareItem"))
-
-        (findViewById(R.id.widget_custom_animation) as ToggleButton).setOnCheckedChangeListener(
-                buildCheckHandler("mCustomAnimation"))
-
-        (findViewById(R.id.widget_show_title) as ToggleButton).setOnCheckedChangeListener(
-                buildCheckHandler("mShouldShowTitle"))
-
-        (findViewById(R.id.widget_action_button) as ToggleButton).setOnCheckedChangeListener(
-                buildCheckHandler("mShouldActionBtn"))
-
-        (findViewById(R.id.widget_close_button) as ToggleButton).setOnCheckedChangeListener(
-                buildCheckHandler("mShouldCloseBtn"))
-
-        (findViewById(R.id.widget_action_button_tint) as ToggleButton).setOnCheckedChangeListener(
-                buildCheckHandler("mShouldActionBtnTint"))
-
-        (findViewById(R.id.widget_hard_code) as ToggleButton).setOnCheckedChangeListener(
-                buildCheckHandler("mShouldHardCode"))
+        // bind listeners to View
+        for ((viewId, cb) in map) {
+            (findViewById(viewId) as ToggleButton).setOnCheckedChangeListener({ _, b ->
+                cb(b)
+                refreshUI()
+            })
+        }
     }
 
     private val selectableUrls: Array<String>
@@ -399,30 +374,6 @@ class MainActivity : AppCompatActivity() {
             }
             return urls.toTypedArray()
         }
-
-    /**
-     * Use reflect to build dynamic function to handle Check-button status change
-
-     * @param fieldName which field to change boolean value
-     * *
-     * @return a handler for CompoundButton.setOnCheckedChangeListener
-     */
-    private fun buildCheckHandler(fieldName: String): CompBtnListener {
-        return CompBtnListener { compoundButton, b ->
-            val clazz = this@MainActivity.javaClass
-            try {
-                val f = clazz.getDeclaredField(fieldName)
-                f.isAccessible = true
-                f.setBoolean(this@MainActivity, b)
-                refreshUI()
-            } catch (e: Exception) {
-                Toast.makeText(this@MainActivity,
-                        "Fail on set " + fieldName,
-                        Toast.LENGTH_SHORT).show()
-                e.printStackTrace()
-            }
-        }
-    }
 
     // Yes, Dirty! Bite me!
     private fun getColorByIdx(idx: Int): Int {
