@@ -28,6 +28,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import android.widget.*
+import java.lang.Long.parseLong
 import java.util.*
 
 typealias CompBtnListener = CompoundButton.OnCheckedChangeListener
@@ -375,7 +376,6 @@ class MainActivity : AppCompatActivity() {
             return urls.toTypedArray()
         }
 
-    // Yes, Dirty! Bite me!
     private fun getColorByIdx(idx: Int): Int {
         val arrays = resources.getStringArray(R.array.selectable_colors)
         val colorText = arrays[idx]
@@ -386,20 +386,14 @@ class MainActivity : AppCompatActivity() {
             "RED" -> return Color.RED
             "BLACK" -> return Color.BLACK
             "WHITE" -> return Color.WHITE
-            "#FF8877FF" -> return 0xFF8877FF.toInt()
-            "#00FFFFFF" -> return 0x00FFFFFF
-            "#FFFFFFF1" -> return 0xFFFFFFF1.toInt()
-            "#FFFFFFFF" -> return 0xFFFFFFFF.toInt()
-            "#11FF0000" -> return 0x11FF0000
-            "#55FF0000" -> return 0x55FF0000
-            "#AAFF0000" -> return 0xAAFF0000.toInt()
-            "#EEFF0000" -> return 0xEEFF0000.toInt()
-            "#1100FF00" -> return 0x1100FF00
-            "#5500FF00" -> return 0x5500FF00
-            "#AA00FF00" -> return 0xAA00FF00.toInt()
-            "#EE00FF00" -> return 0xEE00FF00.toInt()
-            else -> return resources.getColor(R.color.mozillaRed)
         }
+
+        // to match pattern "#FF123456"
+        if (Regex("^#[A-Fa-f0-9]{8}$").matchEntire(colorText) != null) {
+            val hex = colorText.substring(1) // remove '#'
+            return parseLong(hex, 16).toInt()
+        }
+        return resources.getColor(R.color.mozillaRed)
     }
 
     private fun createBuilder(mode: Mode): CustomTabsIntent.Builder {
