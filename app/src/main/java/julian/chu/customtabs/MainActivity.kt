@@ -225,9 +225,12 @@ class MainActivity : AppCompatActivity() {
         // a helper function to build Listener
         fun build(cb: (Int) -> Unit): AdapterView.OnItemSelectedListener {
             return object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(adapterView: AdapterView<*>, view: View, idx: Int, l: Long) {
-                    cb(idx)
-                    refreshUI()
+                override fun onItemSelected(adapterView: AdapterView<*>?, view: View?, idx: Int, l: Long) {
+                    // FIXME: how to avoid this null checking if the Activity is re-created by system
+                    if (adapterView != null && view != null) {
+                        cb(idx)
+                        refreshUI()
+                    }
                 }
 
                 override fun onNothingSelected(adapterView: AdapterView<*>) {}
