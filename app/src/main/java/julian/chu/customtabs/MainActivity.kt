@@ -73,16 +73,7 @@ class MainActivity : AppCompatActivity() {
         mCloseButtonIcon = getBitmap(R.drawable.ic_close)
         mBtn0 = findViewById(R.id.btn_0) as Button
         mInput = findViewById(R.id.edit_text) as EditText
-        bindButton()
-        setSpinners()
-        setToggleButton()
-        refreshUI()
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val window = window
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
-        }
+        initUI()
     }
 
     override fun onDestroy() {
@@ -129,6 +120,30 @@ class MainActivity : AppCompatActivity() {
             else -> return super.onOptionsItemSelected(item)
         }
         return true
+    }
+
+    private fun initUI() {
+        bindButton()
+        setSpinners()
+        setToggleButton()
+
+        val urlSpinner = findViewById(R.id.urls_spinner) as Spinner
+        val urls = selectableUrls
+        val spinnerArrayAdapter = ArrayAdapter(
+                this,
+                android.R.layout.simple_spinner_item,
+                urls)
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        urlSpinner.adapter = spinnerArrayAdapter
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            val window = window
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
+        }
+
+
+        refreshUI()
     }
 
     @Synchronized private fun onConnectService() {
@@ -334,15 +349,6 @@ class MainActivity : AppCompatActivity() {
         findViewById(R.id.close_button_drawable_spinner).isEnabled = mShouldCloseBtn
 
         findViewById(R.id.hard_code_spinner).isEnabled = mShouldHardCode
-
-        val urlSpinner = findViewById(R.id.urls_spinner) as Spinner
-        val urls = selectableUrls
-        val spinnerArrayAdapter = ArrayAdapter(
-                this,
-                android.R.layout.simple_spinner_item,
-                urls)
-        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        urlSpinner.adapter = spinnerArrayAdapter
     }
 
     private fun setToggleButton() {
