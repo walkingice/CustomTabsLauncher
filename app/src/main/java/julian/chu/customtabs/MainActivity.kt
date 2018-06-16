@@ -41,7 +41,11 @@ import java.lang.Long.parseLong
 import java.util.ArrayList
 import java.util.Arrays
 
-typealias CompBtnListener = CompoundButton.OnCheckedChangeListener
+private const val TAG = "TabLauncher"
+private const val REQ_INITIUM = 0x1122
+private const val REQ_MOZILLA = 0x011A
+
+private const val KEY_USER_INPUT_URL = "_the_url_input_by_user_"
 
 class MainActivity : AppCompatActivity() {
 
@@ -569,14 +573,5 @@ class MainActivity : AppCompatActivity() {
         NORMAL,
         UGLY,
         DEPRECATED
-    }
-
-    companion object {
-
-        private val TAG = "TabLauncher"
-        private val REQ_INITIUM = 0x1122
-        private val REQ_MOZILLA = 0x011A
-
-        private val KEY_USER_INPUT_URL = "_the_url_input_by_user_"
     }
 }
