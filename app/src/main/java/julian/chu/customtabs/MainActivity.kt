@@ -30,7 +30,6 @@ import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
-import android.widget.CompoundButton
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.RemoteViews
@@ -49,16 +48,15 @@ private const val KEY_USER_INPUT_URL = "_the_url_input_by_user_"
 
 class MainActivity : AppCompatActivity() {
 
+    private val mSupportPackages = ArrayList<String>()
 
     private var mMenuItemNums = 3
     private var mTopBarColor = Color.WHITE
     private var mBottomBarColor = Color.WHITE
-    private var mActionButtonIcon: Bitmap? = null
-    private var mCloseButtonIcon: Bitmap? = null
     private lateinit var mBtn0: Button
     private lateinit var mInput: EditText
-
-    private var mSupportPackages: List<String>? = null
+    private lateinit var mActionButtonIcon: Bitmap
+    private lateinit var mCloseButtonIcon: Bitmap
 
     private var mShouldCustomTopColor = true
     private var mShouldCustomBottomColor = true
@@ -82,7 +80,7 @@ class MainActivity : AppCompatActivity() {
         initActionBar()
         restorePreferences()
 
-        mSupportPackages = supportPackagesName
+        mSupportPackages.addAll(supportPackagesName)
 
         mActionButtonIcon = getBitmap(R.drawable.ic_ab)
         mCloseButtonIcon = getBitmap(R.drawable.ic_close)
@@ -157,7 +155,6 @@ class MainActivity : AppCompatActivity() {
             window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
         }
 
-
         refreshUI()
     }
 
@@ -196,20 +193,17 @@ class MainActivity : AppCompatActivity() {
 
     @Synchronized
     private fun onWarmUp() {
-        if (mServiceClient == null) {
-            return
+        mServiceClient?.let {
+            val msg = if (it.warmup(0L)) "War up success" else "Warm up fail"
+            prompt(msg)
         }
-
-        val msg = if (mServiceClient!!.warmup(0L)) "War up success" else "Warm up fail"
-        prompt(msg)
     }
 
     @Synchronized
     private fun onMayLaunch() {
-        if (mServiceClient == null) {
-            return
+        mServiceClient?.let {
+            prompt("Not implement yet")
         }
-        prompt("Not implement yet")
     }
 
     private fun onEditUrlClicked() {
@@ -330,22 +324,21 @@ class MainActivity : AppCompatActivity() {
         val hardCodeSpinner = findViewById(R.id.hard_code_spinner) as Spinner
         val spinnerAdapter = ArrayAdapter(this,
                 android.R.layout.simple_spinner_item,
-                mSupportPackages!!)
+                mSupportPackages)
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         hardCodeSpinner.adapter = spinnerAdapter
         spinnerAdapter.notifyDataSetChanged()
         // view might be null, so we don't use build function
         hardCodeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(adapterView: AdapterView<*>, view: View?, i: Int, l: Long) {
-                if (mSupportPackages!!.size < 1) {
+                if (mSupportPackages.size < 1) {
                     return
                 }
-                mTargetPackage = mSupportPackages!![i]
+                mTargetPackage = mSupportPackages[i]
             }
 
             override fun onNothingSelected(adapterView: AdapterView<*>) {}
         }
-
     }
 
     private fun refreshUI() {
@@ -433,7 +426,7 @@ class MainActivity : AppCompatActivity() {
 
         // set action button
         if (mShouldActionBtn) {
-            builder.setActionButton(mActionButtonIcon!!,
+            builder.setActionButton(mActionButtonIcon,
                     "The initium",
                     createIntent(REQ_INITIUM, "https://theinitium.com/"),
                     mShouldActionBtnTint)
@@ -441,7 +434,7 @@ class MainActivity : AppCompatActivity() {
 
         // set close button
         if (mShouldCloseBtn) {
-            builder.setCloseButtonIcon(mCloseButtonIcon!!)
+            builder.setCloseButtonIcon(mCloseButtonIcon)
         }
 
         if (mShouldCustomTopColor) {
@@ -541,8 +534,7 @@ class MainActivity : AppCompatActivity() {
         }
 
     private fun onClickLaunch() {
-        val builder = createBuilder(mMode)
-        val customTabsIntent = builder.build()
+        val customTabsIntent = createBuilder(mMode).build()
         val intent = customTabsIntent.intent
         val uri = Uri.parse(mInput.editableText.toString())
 
@@ -558,8 +550,9 @@ class MainActivity : AppCompatActivity() {
         } catch (e: ActivityNotFoundException) {
             Log.e(TAG, "Specified CustomTabsActivity not found", e)
             // use normal way to launch custom-tab-activity
-            val rebuiltIntent = createBuilder(mMode).build()
-            rebuiltIntent.launchUrl(this, uri)
+            createBuilder(mMode)
+                    .build()
+                    .launchUrl(this, uri)
         }
 
     }
