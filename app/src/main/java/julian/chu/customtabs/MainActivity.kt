@@ -35,13 +35,14 @@ typealias CompBtnListener = CompoundButton.OnCheckedChangeListener
 
 class MainActivity : AppCompatActivity() {
 
+
     private var mMenuItemNums = 3
     private var mTopBarColor = Color.WHITE
     private var mBottomBarColor = Color.WHITE
     private var mActionButtonIcon: Bitmap? = null
     private var mCloseButtonIcon: Bitmap? = null
-    private var mBtn0: Button? = null
-    private var mInput: EditText? = null
+    private lateinit var mBtn0: Button
+    private lateinit var mInput: EditText
 
     private var mSupportPackages: List<String>? = null
 
@@ -232,7 +233,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun bindButton() {
-        mBtn0!!.setOnClickListener { onClickLaunch() }
+        mBtn0.setOnClickListener { onClickLaunch() }
     }
 
     private fun setSpinners() {
@@ -254,7 +255,7 @@ class MainActivity : AppCompatActivity() {
 
         (findViewById(R.id.urls_spinner) as Spinner).onItemSelectedListener = build({ idx ->
             val urls = selectableUrls
-            mInput!!.setText(urls[idx])
+            mInput.setText(urls[idx])
         })
 
         (findViewById(R.id.menu_item_spinner) as Spinner).onItemSelectedListener = build({ idx ->
@@ -526,7 +527,7 @@ class MainActivity : AppCompatActivity() {
         val builder = createBuilder(mMode)
         val customTabsIntent = builder.build()
         val intent = customTabsIntent.intent
-        val uri = Uri.parse(mInput!!.editableText.toString())
+        val uri = Uri.parse(mInput.editableText.toString())
 
         // similar implementation as CustomTabsIntent.launchUrl
         intent.data = uri
