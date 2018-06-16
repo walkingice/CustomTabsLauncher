@@ -27,9 +27,19 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.CompoundButton
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.RemoteViews
+import android.widget.Spinner
+import android.widget.Toast
+import android.widget.ToggleButton
 import java.lang.Long.parseLong
-import java.util.*
+import java.util.ArrayList
+import java.util.Arrays
 
 typealias CompBtnListener = CompoundButton.OnCheckedChangeListener
 
@@ -147,7 +157,8 @@ class MainActivity : AppCompatActivity() {
         refreshUI()
     }
 
-    @Synchronized private fun onConnectService() {
+    @Synchronized
+    private fun onConnectService() {
         val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("http://"))
         val info = packageManager
                 .resolveActivity(browserIntent, PackageManager.MATCH_DEFAULT_ONLY)
@@ -179,7 +190,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    @Synchronized private fun onWarmUp() {
+    @Synchronized
+    private fun onWarmUp() {
         if (mServiceClient == null) {
             return
         }
@@ -188,7 +200,8 @@ class MainActivity : AppCompatActivity() {
         prompt(msg)
     }
 
-    @Synchronized private fun onMayLaunch() {
+    @Synchronized
+    private fun onMayLaunch() {
         if (mServiceClient == null) {
             return
         }
